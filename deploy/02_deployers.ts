@@ -24,7 +24,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
   let holographGenesis: Contract = await hre.ethers.getContract('HolographGenesis', deployer);
 
-  let getSignedRawTx = async (nonce: number, approveDeployer: string): Promise<string> => {
+  let getSignedRawTx = async (approveDeployer: string, nonce: number): Promise<string> => {
     let txRequest: TransactionRequest = {
       to: holographGenesis.address,
       from: deployer.address,
@@ -70,6 +70,19 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
         'a77910b91fe796f0d8',
       ].join('')
     );
+    //await getSignedRawTx('0xd078E391cBAEAa6C5785124a7207ff57d64604b7', 3);
+    // enable 0xd078E391cBAEAa6C5785124a7207ff57d64604b7 on localhost
+    await hre.ethers.provider.sendTransaction(
+      [
+        '0x',
+        'f8a70380830186a0940c8af56f7650a6e3685188d212044338c21d3f7380b844',
+        'a07d7316000000000000000000000000d078e391cbaeaa6c5785124a7207ff57',
+        'd64604b700000000000000000000000000000000000000000000000000000000',
+        '00000001820a98a0ee563a7a4ea3c8cc81250c00dfc839bfe76c41e42e6c7f9c',
+        'dda08f5556d21103a05b0c66a1c57fcd151abd3955b74cb8835d5ac2fd054584',
+        '3e6c78d663e7d60f63',
+      ].join('')
+    );
   } else if (hre.network.name == 'localhost2') {
     //await getSignedRawTx('0xC0FFEE78121f208475ABDd2cf0853a7afED64749', 1);
     // enable 0xC0FFEE78121f208475ABDd2cf0853a7afED64749 on localhost2
@@ -95,6 +108,19 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
         '00000001820a99a0da75a4092b76b4061ddaad5166e0630fe20881abadc46496',
         'c614d9a9bc6f40c7a0056fcda9c2608868b7aee809f24f017077a974000ea8fb',
         '002ccb3e8cf98d4749',
+      ].join('')
+    );
+    //await getSignedRawTx('0xd078E391cBAEAa6C5785124a7207ff57d64604b7', 3);
+    // enable 0xd078E391cBAEAa6C5785124a7207ff57d64604b7 on localhost
+    await hre.ethers.provider.sendTransaction(
+      [
+        '0x',
+        'f8a70380830186a0940c8af56f7650a6e3685188d212044338c21d3f7380b844',
+        'a07d7316000000000000000000000000d078e391cbaeaa6c5785124a7207ff57',
+        'd64604b700000000000000000000000000000000000000000000000000000000',
+        '00000001820a9aa0f60ec05b3d2d9c76ea11e75e86bb38c471e824ae286301ba',
+        '47b9c49b3b68b925a03e1cdcd949dfea76435af19fce10dafddeddc6a91c4c0d',
+        'e1e2dcbecc8238bc1b',
       ].join('')
     );
   } else {
