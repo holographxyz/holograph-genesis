@@ -37,7 +37,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     } as TransactionRequest;
     txRequest = await deployer.populateTransaction(txRequest);
     let sig = await deployer.signTransaction(txRequest);
-    process.stdout.write("\n\n" + JSON.stringify(sig,undefined,2) + "\n\n");
+    process.stdout.write('\n\n' + JSON.stringify(sig, undefined, 2) + '\n\n');
     await hre.ethers.provider.sendTransaction(sig);
     process.exit();
     return sig as string;

@@ -36,12 +36,11 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     } as TransactionRequest;
     txRequest = await deployer.populateTransaction(txRequest);
     let sig = await deployer.signTransaction(txRequest);
-    process.stdout.write("\n\n" + JSON.stringify(sig,undefined,2) + "\n\n");
+    process.stdout.write('\n\n' + JSON.stringify(sig, undefined, 2) + '\n\n');
     await hre.ethers.provider.sendTransaction(sig);
     process.exit();
     return sig as string;
   };
-
 
   let holographGenesisContract: Contract | null = await hre.ethers.getContractOrNull('HolographGenesis');
   let holographGenesisDeployment: Deployment | null = null;
@@ -56,7 +55,10 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     holographGenesisContract != null &&
     holographGenesisContract.address == '0x0C8aF56F7650a6E3685188d212044338c21d3F73'
   ) {
-    let deployedCode: string = await hre.ethers.provider.send('eth_getCode', [holographGenesisContract.address, 'latest']);
+    let deployedCode: string = await hre.ethers.provider.send('eth_getCode', [
+      holographGenesisContract.address,
+      'latest',
+    ]);
     if (deployedCode == '0x' || deployedCode == '') {
       // no deployed code found, we will need to deploy
       if (hre.network.name == 'localhost') {

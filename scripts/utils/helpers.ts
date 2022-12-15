@@ -131,7 +131,11 @@ const txParams = async function ({
   let output: TransactionParamsOutput = {
     from: from as string,
     value: BigNumber.from(value),
-    gasLimit: gasLimit ? ('__gasLimitMultiplier' in global ? gasLimit.mul(global.__gasLimitMultiplier).div(BigNumber.from('10000')) : gasLimit) : await getGasLimit(hre, from as string, to as string, data, BigNumber.from(value)),
+    gasLimit: gasLimit
+      ? '__gasLimitMultiplier' in global
+        ? gasLimit.mul(global.__gasLimitMultiplier).div(BigNumber.from('10000'))
+        : gasLimit
+      : await getGasLimit(hre, from as string, to as string, data, BigNumber.from(value)),
     ...(await getGasPrice()),
     nonce: nonce === undefined ? global.__txNonce[hre.network.name] : nonce,
   };
