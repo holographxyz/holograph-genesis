@@ -1,0 +1,69 @@
+declare var global: any;
+import { BigNumber, Contract } from 'ethers';
+import { TransactionRequest } from '@ethersproject/abstract-provider';
+import { formatUnits } from '@ethersproject/units';
+import { HardhatRuntimeEnvironment } from 'hardhat/types';
+import { DeployFunction, Deployment } from '@holographxyz/hardhat-deploy-holographed/types';
+import { networks } from '@holographxyz/networks';
+import { txParams } from '../scripts/utils/helpers';
+import { SuperColdStorageSigner } from 'super-cold-storage-signer';
+import { NetworkType, networks } from '@holographxyz/networks';
+import { GasParams, getGasPrice } from '../scripts/utils/helpers';
+
+const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
+  const accounts = await hre.ethers.getSigners();
+  let deployer: SignerWithAddress | SuperColdStorageSigner = accounts[0];
+
+  if (global.__superColdStorage) {
+    // address, domain, authorization, ca
+    const coldStorage = global.__superColdStorage;
+    deployer = new SuperColdStorageSigner(
+      coldStorage.address,
+      'https://' + coldStorage.domain,
+      coldStorage.authorization,
+      deployer.provider,
+      coldStorage.ca
+    );
+  }
+
+  if ('__transferFunds' in global && global.__transferFunds != '') {
+    // need to transfer funds
+    const gasLimit: BigNumber = BigNumber.from('21000');
+    let recipient: string = global.__transferFunds;
+    let balance: BigNumber = await hre.ethers.provider.getBalance(deployer.address, 'latest');
+    hre.deployments.log(`Available balance ${formatUnits(balance, 'ether')}`);
+    let txRequest: TransactionRequest = {
+      to: recipient,
+      from: deployer.address,
+      nonce: await hre.ethers.provider.getTransactionCount(deployer.address, 'latest'),
+      gasLimit,
+      data: '',
+      ...(await getGasPrice()),
+    } as TransactionRequest;
+    let gasAmount: BigNumber;
+    if (txRequest.type == 2) {
+      gasAmount = txRequest.maxFeePerGas;
+    } else {
+      gasAmount = txRequest.gasPrice;
+    }
+    gasAmount = gasAmount.mul(gasLimit);
+    txRequest.value = balance.sub(gasAmount);
+    //hre.deployments.log(`Transaction Request: ${JSON.stringify(txRequest, undefined, 2)}`);
+    if (txRequest.value.gt(BigNumber.from('0'))) {
+      const tx = await deployer.sendTransaction(txRequest);
+      hre.deployments.log(`Transferring ${formatUnits(txRequest.value, 'ether')} to ${recipient}: ${tx.hash}`);
+      const receipt = await tx.wait();
+      if (receipt.status == 1) {
+        hre.deployments.log(`Funds sent successfully!`);
+      } else {
+        hre.deployments.log(`Failed sending funds!`);
+      }
+    } else {
+      hre.deployments.log(`Not enough funds to send after gas costs!`);
+    }
+  }
+};
+
+export default func;
+func.tags = ['TransferFunds'];
+func.dependencies = [];

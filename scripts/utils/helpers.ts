@@ -153,4 +153,14 @@ const remove0x = function (input: string): string {
   }
 };
 
-export { txParams, generateInitCode, zeroAddress, remove0x };
+export {
+  getGasLimit,
+  GasParams,
+  TransactionParams,
+  TransactionParamsOutput,
+  getGasPrice,
+  txParams,
+  generateInitCode,
+  zeroAddress,
+  remove0x,
+};

@@ -50,6 +50,10 @@ if (
   };
 }
 
+if (process.env.FUNDS_TRANSFER && process.env.FUNDS_TRANSFER != '') {
+  global.__transferFunds = process.env.FUNDS_TRANSFER;
+}
+
 const setDeployerKey = function (fallbackKey: string | number): string | number {
   if ('__superColdStorage' in global) {
     return ('super-cold-storage://' + global.__superColdStorage.address) as string;

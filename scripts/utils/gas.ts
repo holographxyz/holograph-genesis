@@ -71,6 +71,14 @@ export function adjustBaseBlockFee(network: string, baseBlockFee: BigNumber): Bi
   ) {
     return BigNumber.from('25000000000');
   }
+  // Arbitrum has a minimum BaseBlockFee of 0.1 GWEI
+  if (
+    (network === networks['arbitrum' as NetworkKeys].key ||
+      network === networks['arbitrumTestnetGoerli' as NetworkKeys].key) &&
+    baseBlockFee.lt(BigNumber.from('100000000'))
+  ) {
+    return BigNumber.from('100000000');
+  }
 
   return baseBlockFee;
 }
