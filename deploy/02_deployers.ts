@@ -5,6 +5,7 @@ import { DeployFunction, Deployment } from '@holographxyz/hardhat-deploy-hologra
 import { networks } from '@holographxyz/networks';
 import { txParams } from '../scripts/utils/helpers';
 import { SuperColdStorageSigner } from 'super-cold-storage-signer';
+import { NetworkType, networks } from '@holographxyz/networks';
 
 const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const accounts = await hre.ethers.getSigners();
@@ -43,7 +44,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     return sig as string;
   };
 
-  if (hre.network.name == 'localhost') {
+  if (hre.network.name == networks.localhost.key) {
     //await getSignedRawTx('0xC0FFEE78121f208475ABDd2cf0853a7afED64749', 1);
     // enable 0xC0FFEE78121f208475ABDd2cf0853a7afED64749 on localhost
     await hre.ethers.provider.sendTransaction(
@@ -83,7 +84,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
         '3e6c78d663e7d60f63',
       ].join('')
     );
-  } else if (hre.network.name == 'localhost2') {
+  } else if (hre.network.name == networks.localhost2.key) {
     //await getSignedRawTx('0xC0FFEE78121f208475ABDd2cf0853a7afED64749', 1);
     // enable 0xC0FFEE78121f208475ABDd2cf0853a7afED64749 on localhost2
     await hre.ethers.provider.sendTransaction(
@@ -138,6 +139,23 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
         })),
       });
       let receipt = await tx.wait();
+    }
+    if (networks[hre.network.name].type == NetworkType.testnet) {
+      if (!(await holographGenesis.isApprovedDeployer('0xd078E391cBAEAa6C5785124a7207ff57d64604b7'))) {
+        //
+        let tx = await holographGenesis.approveDeployer('0xd078E391cBAEAa6C5785124a7207ff57d64604b7', true, {
+          ...(await txParams({
+            hre,
+            from: deployer,
+            to: holographGenesis,
+            data: holographGenesis.populateTransaction.approveDeployer(
+              '0xd078E391cBAEAa6C5785124a7207ff57d64604b7',
+              true
+            ),
+          })),
+        });
+        let receipt = await tx.wait();
+      }
     }
   }
 };
