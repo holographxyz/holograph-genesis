@@ -547,10 +547,10 @@
   resolved "https://registry.yarnpkg.com/@holographxyz/hardhat-holograph-contract-builder/-/hardhat-holograph-contract-builder-0.0.4.tgz#da2eb5abfbe771ce9db217671b653a38f0e7fccf"
   integrity sha512-W/vWgHT6bZWdmJoWJxdWHnUCscrpOXbL1mo2WCDVtjrHQmXivMal7aRZw+ZeDfjTpcvGQ0SBxC+nJZZGCnuVDA==
 
-"@holographxyz/networks@0.1.12":
-  version "0.1.12"
-  resolved "https://registry.yarnpkg.com/@holographxyz/networks/-/networks-0.1.12.tgz#652d3269d062e4ae5008b74956229716e7ca14ba"
-  integrity sha512-EBw6BMjvDe1Sk8/IXTtArLIk0D7/jOu6xY8bQbvOEEq6X6ZD6V1whD3a23oT7+oVaU/jmHYa/ygKJXXllMyvRw==
+"@holographxyz/networks@0.1.15":
+  version "0.1.15"
+  resolved "https://registry.yarnpkg.com/@holographxyz/networks/-/networks-0.1.15.tgz#97a742ecbf38480fda128650f4a2298f2ab238ba"
+  integrity sha512-tXpyaJS/1+fMowIzb1n3bzA49JuQ63BxEDurz+eCQW9Ky0kEIg0fLSPJQnv358/aCEkmlTISGz2gwxjKOFODyQ==
   dependencies:
     "@ethersproject/bignumber" "^5.7.0"
     "@holographxyz/environment" "0.1.10"

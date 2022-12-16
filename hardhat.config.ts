@@ -58,15 +58,20 @@ const setDeployerKey = function (fallbackKey: string | number): string | number 
   }
 };
 
-const AVALANCHE_PRIVATE_KEY = process.env.AVALANCHE_PRIVATE_KEY || DEPLOYER;
-const AVALANCHE_TESTNET_PRIVATE_KEY = process.env.AVALANCHE_TESTNET_PRIVATE_KEY || DEPLOYER;
-const BINANCE_SMART_CHAIN_PRIVATE_KEY = process.env.BINANCE_SMART_CHAIN_PRIVATE_KEY || DEPLOYER;
-const BINANCE_SMART_CHAIN_TESTNET_PRIVATE_KEY = process.env.BINANCE_SMART_CHAIN_TESTNET_PRIVATE_KEY || DEPLOYER;
-const ETHEREUM_PRIVATE_KEY = process.env.ETHEREUM_PRIVATE_KEY || DEPLOYER;
-const ETHEREUM_TESTNET_GOERLI_PRIVATE_KEY = process.env.ETHEREUM_TESTNET_GOERLI_PRIVATE_KEY || DEPLOYER;
-const ETHEREUM_TESTNET_RINKEBY_PRIVATE_KEY = process.env.ETHEREUM_TESTNET_RINKEBY_PRIVATE_KEY || DEPLOYER;
-const POLYGON_PRIVATE_KEY = process.env.POLYGON_PRIVATE_KEY || DEPLOYER;
-const POLYGON_TESTNET_PRIVATE_KEY = process.env.POLYGON_TESTNET_PRIVATE_KEY || DEPLOYER;
+const dynamicNetworks = function (): unknown {
+  let output = {};
+  for (const name of Object.keys(networks)) {
+    if (name != 'hardhat' && name != 'localhost' && name != 'localhost2') {
+      let envKey = name.replace(/([A-Z]{1})/g, '_$1').toUpperCase();
+      output[name] = {
+        url: process.env[envKey + '_RPC_URL'] || networks[name].rpc,
+        chainId: networks[name].chain,
+        accounts: [process.env[envKey + '_PRIVATE_KEY'] || DEPLOYER],
+      };
+    }
+  }
+  return output;
+};
 
 const ETHERSCAN_API_KEY: string = process.env.ETHERSCAN_API_KEY || '';
 const POLYGONSCAN_API_KEY: string = process.env.POLYGONSCAN_API_KEY || '';
@@ -182,51 +187,7 @@ const config: HardhatUserConfig = {
       },
       saveDeployments: false,
     },
-    avalanche: {
-      url: networks.avalanche.rpc,
-      chainId: networks.avalanche.chain,
-      accounts: [AVALANCHE_PRIVATE_KEY],
-    },
-    avalancheTestnet: {
-      url: networks.avalancheTestnet.rpc,
-      chainId: networks.avalancheTestnet.chain,
-      accounts: [AVALANCHE_TESTNET_PRIVATE_KEY],
-    },
-    binanceSmartChain: {
-      url: networks.binanceSmartChain.rpc,
-      chainId: networks.binanceSmartChain.chain,
-      accounts: [BINANCE_SMART_CHAIN_PRIVATE_KEY],
-    },
-    binanceSmartChainTestnet: {
-      url: networks.binanceSmartChainTestnet.rpc,
-      chainId: networks.binanceSmartChainTestnet.chain,
-      accounts: [BINANCE_SMART_CHAIN_TESTNET_PRIVATE_KEY],
-    },
-    ethereum: {
-      url: networks.ethereum.rpc,
-      chainId: networks.ethereum.chain,
-      accounts: [ETHEREUM_PRIVATE_KEY],
-    },
-    ethereumTestnetRinkeby: {
-      url: networks.ethereumTestnetRinkeby.rpc,
-      chainId: networks.ethereumTestnetRinkeby.chain,
-      accounts: [ETHEREUM_TESTNET_RINKEBY_PRIVATE_KEY],
-    },
-    ethereumTestnetGoerli: {
-      url: networks.ethereumTestnetGoerli.rpc,
-      chainId: networks.ethereumTestnetGoerli.chain,
-      accounts: [ETHEREUM_TESTNET_GOERLI_PRIVATE_KEY],
-    },
-    polygon: {
-      url: networks.polygon.rpc,
-      chainId: networks.polygon.chain,
-      accounts: [POLYGON_PRIVATE_KEY],
-    },
-    polygonTestnet: {
-      url: networks.polygonTestnet.rpc,
-      chainId: networks.polygonTestnet.chain,
-      accounts: [POLYGON_TESTNET_PRIVATE_KEY],
-    },
+    ...dynamicNetworks(),
   },
   namedAccounts: {
     deployer: setDeployerKey(0),
