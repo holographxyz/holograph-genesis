@@ -90,6 +90,12 @@ export function adjustBaseBlockFee(network: string, baseBlockFee: BigNumber): Bi
   ) {
     return BigNumber.from('1500000000');
   } else if (
+    (network === networks['klaytnCypress' as NetworkKeys].key ||
+      network === networks['klaytnTestnet' as NetworkKeys].key) &&
+    baseBlockFee.lt(BigNumber.from('25000000000'))
+  ) {
+    return BigNumber.from('25000000000');
+  } else if (
     (network === networks['iotex' as NetworkKeys].key || network === networks['iotexTestnet' as NetworkKeys].key) &&
     baseBlockFee.lt(BigNumber.from('1000000000000'))
   ) {
