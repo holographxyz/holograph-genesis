@@ -90,6 +90,16 @@ export function adjustBaseBlockFee(network: string, baseBlockFee: BigNumber): Bi
   ) {
     return BigNumber.from('1500000000');
   } else if (
+    (network === networks['iotex' as NetworkKeys].key || network === networks['iotexTestnet' as NetworkKeys].key) &&
+    baseBlockFee.lt(BigNumber.from('1000000000000'))
+  ) {
+    return BigNumber.from('1000000000000');
+  } else if (
+    (network === networks['evmos' as NetworkKeys].key || network === networks['evmosTestnet' as NetworkKeys].key) &&
+    baseBlockFee.lt(BigNumber.from('10000000'))
+  ) {
+    return BigNumber.from('10000000');
+  } else if (
     (network === networks['bobaEthereumTestnetGoerli' as NetworkKeys].key ||
       network === networks['bobaAvalancheTestnet' as NetworkKeys].key ||
       network === networks['bobaBinanceChainTestnet' as NetworkKeys].key ||
