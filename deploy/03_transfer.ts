@@ -18,7 +18,7 @@ function getTransferGasLimit(network: string): BigNumber {
   } else if (network === networks['bobaBinanceChainTestnet' as NetworkKeys].key) {
     return BigNumber.from('83301');
   } else if (network === networks['bobaMoonbeamTestnet' as NetworkKeys].key) {
-    return BigNumber.from('0');
+    return BigNumber.from('612384');
   } else if (network === networks['bobaEthereumTestnetGoerli' as NetworkKeys].key) {
     return BigNumber.from('26757');
   }
