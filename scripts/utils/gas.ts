@@ -78,22 +78,18 @@ export function adjustBaseBlockFee(network: string, baseBlockFee: BigNumber): Bi
     baseBlockFee.lt(BigNumber.from('100000000'))
   ) {
     return BigNumber.from('100000000');
-  }
-  else if (
-    (network === networks['canto' as NetworkKeys].key ||
-      network === networks['cantoTestnet' as NetworkKeys].key) &&
+  } else if (
+    (network === networks['canto' as NetworkKeys].key || network === networks['cantoTestnet' as NetworkKeys].key) &&
     baseBlockFee.lt(BigNumber.from('100000000000'))
   ) {
     return BigNumber.from('100000000000');
-  }
-  else if (
+  } else if (
     (network === networks['kekChain' as NetworkKeys].key ||
       network === networks['kekChainTestnet' as NetworkKeys].key) &&
     baseBlockFee.lt(BigNumber.from('1500000000'))
   ) {
     return BigNumber.from('1500000000');
-  }
-  else if (
+  } else if (
     (network === networks['bobaEthereumTestnetGoerli' as NetworkKeys].key ||
       network === networks['bobaAvalancheTestnet' as NetworkKeys].key ||
       network === networks['bobaBinanceChainTestnet' as NetworkKeys].key ||
@@ -102,8 +98,9 @@ export function adjustBaseBlockFee(network: string, baseBlockFee: BigNumber): Bi
     baseBlockFee.lt(BigNumber.from('1000000000'))
   ) {
     return BigNumber.from('1000000000');
-  }
-  else if (
+  } else if (network === networks['dogechain' as NetworkKeys].key && baseBlockFee.lt(BigNumber.from('250000000000'))) {
+    return BigNumber.from('250000000000');
+  } else if (
     network === networks['ethereumTestnetRinkeby' as NetworkKeys].key &&
     baseBlockFee.lt(BigNumber.from('1500000000'))
   ) {
