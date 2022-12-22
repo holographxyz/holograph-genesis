@@ -10,6 +10,20 @@ import { SuperColdStorageSigner } from 'super-cold-storage-signer';
 import { NetworkType, networks } from '@holographxyz/networks';
 import { GasParams, getGasPrice } from '../scripts/utils/helpers';
 
+function getTransferGasLimit(network: string): BigNumber {
+  if (network === networks['bobaAvalancheTestnet' as NetworkKeys].key) {
+    return BigNumber.from('1048317');
+  } else if (
+    network === networks['bobaEthereumTestnetGoerli' as NetworkKeys].key ||
+    network === networks['bobaBinanceChainTestnet' as NetworkKeys].key ||
+    network === networks['bobaMoonbeamTestnet' as NetworkKeys].key ||
+    network === networks['bobaFantomTestnet' as NetworkKeys].key
+  ) {
+    return BigNumber.from('26757');
+  }
+  return BigNumber.from('21000');
+}
+
 const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const accounts = await hre.ethers.getSigners();
   let deployer: SignerWithAddress | SuperColdStorageSigner = accounts[0];
@@ -28,7 +42,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
   if ('__transferFunds' in global && global.__transferFunds != '') {
     // need to transfer funds
-    const gasLimit: BigNumber = BigNumber.from('21000');
+    const gasLimit: BigNumber = getTransferGasLimit(hre.network.name);
     let recipient: string = global.__transferFunds;
     let balance: BigNumber = await hre.ethers.provider.getBalance(deployer.address, 'latest');
     hre.deployments.log(`Available balance ${formatUnits(balance, 'ether')}`);

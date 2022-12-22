@@ -72,12 +72,32 @@ export function adjustBaseBlockFee(network: string, baseBlockFee: BigNumber): Bi
     return BigNumber.from('25000000000');
   }
   // Arbitrum has a minimum BaseBlockFee of 0.1 GWEI
-  if (
+  else if (
     (network === networks['arbitrum' as NetworkKeys].key ||
       network === networks['arbitrumTestnetGoerli' as NetworkKeys].key) &&
     baseBlockFee.lt(BigNumber.from('100000000'))
   ) {
     return BigNumber.from('100000000');
+  } else if (
+    (network === networks['kekChain' as NetworkKeys].key ||
+      network === networks['kekChainTestnet' as NetworkKeys].key) &&
+    baseBlockFee.lt(BigNumber.from('1500000000'))
+  ) {
+    return BigNumber.from('1500000000');
+  } else if (
+    (network === networks['bobaEthereumTestnetGoerli' as NetworkKeys].key ||
+      network === networks['bobaAvalancheTestnet' as NetworkKeys].key ||
+      network === networks['bobaBinanceChainTestnet' as NetworkKeys].key ||
+      network === networks['bobaMoonbeamTestnet' as NetworkKeys].key ||
+      network === networks['bobaFantomTestnet' as NetworkKeys].key) &&
+    baseBlockFee.lt(BigNumber.from('1000000000'))
+  ) {
+    return BigNumber.from('1000000000');
+  } else if (
+    network === networks['ethereumTestnetRinkeby' as NetworkKeys].key &&
+    baseBlockFee.lt(BigNumber.from('1500000000'))
+  ) {
+    return BigNumber.from('1500000000');
   }
 
   return baseBlockFee;
@@ -125,6 +145,11 @@ export function updateGasPricing(
       gasPricing.maxFeePerGas = gasPricing.nextBlockFee!.add(gasPricing.nextPriorityFee!);
       gasPricing.gasPrice = gasPricing.maxFeePerGas;
     }
+  } else {
+    if (gasPricing.gasPrice == null) {
+      gasPricing.gasPrice = BigNumber.from('0');
+    }
+    gasPricing.gasPrice = adjustBaseBlockFee(network, gasPricing.gasPrice);
   }
 
   return gasPricing;
