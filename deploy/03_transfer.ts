@@ -13,12 +13,13 @@ import { GasParams, getGasPrice } from '../scripts/utils/helpers';
 function getTransferGasLimit(network: string): BigNumber {
   if (network === networks['bobaAvalancheTestnet' as NetworkKeys].key) {
     return BigNumber.from('1048317');
-  } else if (
-    network === networks['bobaEthereumTestnetGoerli' as NetworkKeys].key ||
-    network === networks['bobaBinanceChainTestnet' as NetworkKeys].key ||
-    network === networks['bobaMoonbeamTestnet' as NetworkKeys].key ||
-    network === networks['bobaFantomTestnet' as NetworkKeys].key
-  ) {
+  } else if (network === networks['bobaFantomTestnet' as NetworkKeys].key) {
+    return BigNumber.from('1050157');
+  } else if (network === networks['bobaBinanceChainTestnet' as NetworkKeys].key) {
+    return BigNumber.from('83301');
+  } else if (network === networks['bobaMoonbeamTestnet' as NetworkKeys].key) {
+    return BigNumber.from('0');
+  } else if (network === networks['bobaEthereumTestnetGoerli' as NetworkKeys].key) {
     return BigNumber.from('26757');
   }
   return BigNumber.from('21000');
